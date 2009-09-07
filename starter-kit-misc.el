@@ -30,7 +30,7 @@
       save-place-file (concat dotfiles-dir "places"))
 
 ;; Set this to whatever browser you use:
-(setq browse-url-browser-function 'browse-url-firefox)
+;; (setq browse-url-browser-function 'browse-url-firefox)
 ;; (setq browse-url-browser-function 'browse-default-macosx-browser)
 ;; (setq browse-url-browser-function 'browse-default-windows-browser)
 ;; (setq browse-url-browser-function 'browse-default-kde)
@@ -44,7 +44,7 @@
 
 ;; Enable syntax highlighting for older Emacsen that have it off
 (global-font-lock-mode t)
-
+ 
 ;; You really don't need this; trust me.
 (menu-bar-mode -1)
 
@@ -109,6 +109,16 @@
 ;; make emacs use the clipboard
 (setq x-select-enable-clipboard t)
 (setq interprogram-paste-function 'x-cut-buffer-or-selection-value)
+
+
+;; full screen feature means no distraction
+(defun fullscreen (&optional f)
+  (interactive)
+  (set-frame-parameter f 'fullscreen
+    (if (frame-parameter f 'fullscreen) nil 'fullboth)))
+
+(global-set-key [f11] 'fullscreen)
+(add-hook 'after-make-frame-functions 'fullscreen)
 
 
 (provide 'starter-kit-misc)
