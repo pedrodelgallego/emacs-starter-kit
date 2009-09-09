@@ -110,15 +110,30 @@
 (setq x-select-enable-clipboard t)
 (setq interprogram-paste-function 'x-cut-buffer-or-selection-value)
 
-
 ;; full screen feature means no distraction
-(defun fullscreen (&optional f)
-  (interactive)
-  (set-frame-parameter f 'fullscreen
-    (if (frame-parameter f 'fullscreen) nil 'fullboth)))
+(defvar fullscreen t "Check if fullscreen is on or off")
 
-(global-set-key [f11] 'fullscreen)
-(add-hook 'after-make-frame-functions 'fullscreen)
+(defun fullscreen-off ()
+ (interactive)
+ (if (fboundp 'w32-send-sys-command)
+       (w32-send-sys-command 61728) ;; WM_SYSCOMMAND restore #xf120
+       (progn (set-frame-parameter nil 'width 82)
+                  (set-frame-parameter nil 'fullscreen 'fullheight))))
+
+(defun fullscreen-on ()
+ (interactive)
+ (if (fboundp 'w32-send-sys-command)
+       (w32-send-sys-command 61488) ;; WM_SYSCOMMAND maximaze #xf030
+       (set-frame-parameter nil 'fullscreen 'fullboth)))
+
+(defun toggle-fullscreen ()
+ (interactive)
+ (setq fullscreen (not fullscreen))
+ (if fullscreen
+       (fullscreen-off)
+       (fullscreen-on)))
+
+(global-set-key [f11] 'toggle-fullscreen)
 
 
 (provide 'starter-kit-misc)
